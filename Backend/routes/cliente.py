@@ -4,6 +4,8 @@ from models.cliente import clientes  # Importa la tabla de clientes
 from schemas.clientes import Cliente
 from fastapi import HTTPException
 from fastapi import Form
+from sqlalchemy import or_
+
 
 
 cliente = APIRouter()  # Cambia el nombre de la variable a cliente_router
@@ -57,6 +59,34 @@ def get_cliente_byentrenador(id:str):
             "id_entrenador": row[6] 
         }
         cliente_list.append(cliente_dict)
+    return cliente_list
+
+@cliente.get("/clientes/entrenador/{id}/{input}")
+def get_cliente_nombre(id: str, input: str):
+    # Define tu consulta sin ejecutarla todavía
+    query = clientes.select().where(clientes.c.id_entrenador == id)
+
+    # Añade la condición para que la columna "nombre" o "apellido" contenga la cadena especificada
+    cadena_buscada = f"%{input}%"
+    query = query.where(or_(clientes.c.nombre.ilike(cadena_buscada), clientes.c.apellido.ilike(cadena_buscada)))
+
+    # Ejecuta la consulta y obtén los resultados
+    resultados = conn.execute(query)
+
+    # Itera sobre los resultados si es necesario
+    cliente_list = []
+    for row in resultados:
+        cliente_dict = {
+            "id": row[0],
+            "nombre": row[1],
+            "apellido": row[2],
+            "edad": row[3],
+            "altura": row[4],
+            "patologias": row[5],
+            "id_entrenador": row[6] 
+        }
+        cliente_list.append(cliente_dict)
+
     return cliente_list
 
 
