@@ -54,12 +54,12 @@ def get_cliente_byentrenador(id:str):
         cliente_dict = {
             "id": row[0],
             "nombre": row[1],
-            "avatar": row[2],
-            "apellido": row[3],
-            "edad": row[4],
-            "altura": row[5],
-            "patologias": row[6],
-            "id_entrenador": row[7] 
+            "apellido": row[2],
+            "edad": row[3],
+            "altura": row[4],
+            "patologias": row[5],
+            "avatar": row[6],
+            "id_entrenador": row[7]
         }
         cliente_list.append(cliente_dict)
     return cliente_list
