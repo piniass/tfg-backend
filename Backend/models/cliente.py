@@ -9,6 +9,7 @@ clientes = Table(
     Column("edad", Integer, nullable=True),
     Column("altura", Float, nullable=True),
     Column("patologias", String(255), nullable=True),
+    Column("avatar", String(100), nullable=True),
     Column("id_entrenador", Integer, ForeignKey("entrenadores.id"), nullable=True)
 )
 

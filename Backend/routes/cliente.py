@@ -22,7 +22,8 @@ def get_clientes():
             "edad": row[3],
             "altura": row[4],
             "patologias": row[5],
-            "id_entrenador": row[6] 
+            "avatar": row[6],
+            "id_entrenador": row[7] 
         }
         cliente_list.append(cliente_dict)
     return cliente_list
@@ -35,11 +36,12 @@ def get_cliente_byid(id:str):
         cliente_dict = {
             "id": row[0],
             "nombre": row[1],
-            "apellido": row[2],
-            "edad": row[3],
-            "altura": row[4],
-            "patologias": row[5],
-            "id_entrenador": row[6] 
+            "apellido": row[4],
+            "edad": row[5],
+            "altura": row[6],
+            "patologias": row[7],
+            "avatar": row[3],
+            "id_entrenador": row[8] 
         }
         cliente_list.append(cliente_dict)
     return cliente_list
@@ -56,7 +58,8 @@ def get_cliente_byentrenador(id:str):
             "edad": row[3],
             "altura": row[4],
             "patologias": row[5],
-            "id_entrenador": row[6] 
+            "avatar": row[6],
+            "id_entrenador": row[7]
         }
         cliente_list.append(cliente_dict)
     return cliente_list
@@ -83,7 +86,8 @@ def get_cliente_nombre(id: str, input: str):
             "edad": row[3],
             "altura": row[4],
             "patologias": row[5],
-            "id_entrenador": row[6] 
+            "avatar": row[6],
+            "id_entrenador": row[7] 
         }
         cliente_list.append(cliente_dict)
 
@@ -91,13 +95,14 @@ def get_cliente_nombre(id: str, input: str):
 
 
 @cliente.post("/cliente")
-def create_cliente(nombre: str = Form(...), apellido: str = Form(...), edad: int = Form(...), altura: float = Form(...), patologias: str = Form(...), id_entrenador: int = Form(...)):
+def create_cliente(nombre: str = Form(...), apellido: str = Form(...), edad: int = Form(...), altura: float = Form(...), patologias: str = Form(...), avatar: str = Form(...),id_entrenador: int = Form(...)):
     new_cliente = {
         "nombre": nombre,
         "apellido": apellido,
         "edad": edad,
         "altura": altura,
         "patologias": patologias,
+        "avatar": avatar,
         "id_entrenador": id_entrenador
     }
     conn.execute(clientes.insert().values(new_cliente))
@@ -112,6 +117,7 @@ def update_cliente(id: str, cliente: Cliente):
         "edad": cliente.edad,
         "altura": cliente.altura,
         "patologias": cliente.patologias,
+        "avatar": cliente.avatar,
         "id_entrenador": cliente.id_entrenador
     }
     result = conn.execute(clientes.update().where(clientes.c.id == id).values(updated_cliente))

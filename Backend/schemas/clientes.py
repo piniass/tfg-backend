@@ -8,4 +8,5 @@ class Cliente(BaseModel):
     edad: int
     altura: float
     patologias: Optional[str]
+    avatar: str
     id_entrenador: int

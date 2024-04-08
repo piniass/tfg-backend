@@ -2,12 +2,15 @@ from fastapi import APIRouter, HTTPException
 from config.db import conn
 from models.peso import registro_pesos  # Importa la tabla de registro_pesos
 from schemas.pesos import RegistroPesos  # Importa el BaseModel para registro de pesos
+from fastapi import Form
+from fastapi import HTTPException
+
 
 pesos = APIRouter()  # Cambia el nombre de la variable a pesos_router
 
 @pesos.get("/pesos/cliente/{id}")
 def get_registro_pesos_by_id(id: int):
-    query = conn.execute(registro_pesos.select().where(registro_pesos.c.id == id))
+    query = conn.execute(registro_pesos.select().where(registro_pesos.c.id_cliente == id))
     registro_pesos_list = []
     for row in query:
         registro_pesos_dict = {
@@ -19,11 +22,11 @@ def get_registro_pesos_by_id(id: int):
         registro_pesos_list.append(registro_pesos_dict)
     return registro_pesos_list
 
-@pesos.post("/pesos/cliente/{id}")
-def post_pesos_cliente(id:int, peso:float):
+@pesos.post("/pesos/cliente")
+def post_pesos_cliente(id_cliente:int = Form(...), peso:float = Form(...)):
     nuevo_peso = {
-        "peso":peso,
-        "id_cliente": id
+        "id_cliente": id_cliente,
+        "peso":peso 
     }
     conn.execute(registro_pesos.insert().values(nuevo_peso))
     conn.commit()
