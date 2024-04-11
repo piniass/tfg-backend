@@ -44,18 +44,39 @@ async def get_entrenadores_byid(id:str):
         entrenadores_list.append(entrenador_dict)
     return entrenadores_list
 
+from fastapi import HTTPException
+
+from fastapi import HTTPException
+
 @entrenador.post("/entrenadores")
-async def create_entrenador(entrenador: Entrenador):
-    new_entrenador = {
-        "nombre": entrenador.nombre,
-        "apellido": entrenador.apellido,
-        "correo": entrenador.correo,
-        "password": entrenador.password,
-        "avatar": entrenador.avatar
-    }
-    conn.execute(entrenadores.insert().values(new_entrenador))
-    conn.commit()
-    return {"message": f"Entrenador {entrenador.nombre} {entrenador.apellido} creado"}
+async def create_entrenador(nombre: str = Form(...), apellido: str = Form(...), correo: str = Form(...),password: str = Form(...),avatar: str = Form(...),tags=["entrenadores"], description="Create a new entrenador"):
+    try:
+        if not nombre:
+            raise HTTPException(status_code=422, detail={"error": "El campo 'nombre' está vacío"})
+        if not apellido:
+            raise HTTPException(status_code=422, detail={"error": "El campo 'apellido' está vacío"})
+        if not correo:
+            raise HTTPException(status_code=422, detail={"error": "El campo 'correo' está vacío"})
+        if not password:
+            raise HTTPException(status_code=422, detail={"error": "El campo 'password' está vacío"})
+        if not avatar:
+            raise HTTPException(status_code=422, detail={"error": "El campo 'avatar' está vacío"})
+
+        new_entrenador = {
+            "nombre": nombre,
+            "apellido": apellido,
+            "correo": correo,
+            "password": password,
+            "avatar": avatar
+        }
+
+        conn.execute(entrenadores.insert().values(new_entrenador))
+        conn.commit()
+        return {"message": f"Entrenador {nombre} {apellido} creado"}
+    except HTTPException as e:
+        return e.detail
+
+
 
 @entrenador.put("/entrenadores/{id}")
 async def update_entrenador(id: str, entrenador_data: Entrenador):
