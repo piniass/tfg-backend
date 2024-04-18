@@ -32,11 +32,11 @@ def post_pesos_cliente(id_cliente:int = Form(...), peso:float = Form(...)):
     conn.commit()
     return {"message": f"Peso del cliente con id {id} creado"}
 
-@pesos.put("/pesos/cliente/{id}")
-def update_peso(id:int, peso:float):
+@pesos.put("/pesos/{id}")
+def update_peso(id:int, peso:float= Form(...)):
     nuevo_peso = {
-        "peso":peso,
-        "id": id
+        "id": id,
+        "peso": peso
     }
     result = conn.execute(registro_pesos.update().where(registro_pesos.c.id == id).values(nuevo_peso))
     conn.commit()
