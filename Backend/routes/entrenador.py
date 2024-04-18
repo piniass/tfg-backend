@@ -6,6 +6,8 @@ from fastapi import Depends, Form, HTTPException, APIRouter
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
+from fastapi import Request
+from fastapi.responses import JSONResponse
 
 
 
@@ -44,24 +46,26 @@ async def get_entrenadores_byid(id:str):
         entrenadores_list.append(entrenador_dict)
     return entrenadores_list
 
-from fastapi import HTTPException
-
-from fastapi import HTTPException
-
 @entrenador.post("/entrenadores")
-async def create_entrenador(nombre: str = Form(...), apellido: str = Form(...), correo: str = Form(...),password: str = Form(...),avatar: str = Form(...),tags=["entrenadores"], description="Create a new entrenador"):
+async def create_entrenador(
+    nombre: str = Form(...),
+    apellido: str = Form(...),
+    correo: str = Form(...),
+    password: str = Form(...),
+    avatar: str = Form(...)
+):
     try:
         if not nombre:
-            raise HTTPException(status_code=422, detail={"error": "El campo 'nombre' está vacío"})
+            raise HTTPException(status_code=422, detail="El campo 'nombre' está vacío")
         if not apellido:
-            raise HTTPException(status_code=422, detail={"error": "El campo 'apellido' está vacío"})
+            raise HTTPException(status_code=422, detail="El campo 'apellido' está vacío")
         if not correo:
-            raise HTTPException(status_code=422, detail={"error": "El campo 'correo' está vacío"})
+            raise HTTPException(status_code=422, detail="El campo 'correo' está vacío")
         if not password:
-            raise HTTPException(status_code=422, detail={"error": "El campo 'password' está vacío"})
+            raise HTTPException(status_code=422, detail="El campo 'password' está vacío")
         if not avatar:
-            raise HTTPException(status_code=422, detail={"error": "El campo 'avatar' está vacío"})
-
+            raise HTTPException(status_code=422, detail="El campo 'avatar' está vacío")
+    ##Controlar que los usuarios no tengan el mismo correo electronico
         new_entrenador = {
             "nombre": nombre,
             "apellido": apellido,
