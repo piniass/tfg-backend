@@ -1,15 +1,23 @@
 {
     "builds": [
-    {
+      {
         "src": "*.py",
         "use": "@vercel/python",
-        "config": { "maxLamdaSize": "15mb" }
-    }
-],
-"routes": [
-    {
+        "config": {
+          "maxLambdaSize": "15mb"
+        }
+      }
+    ],
+    "routes": [
+      {
         "src": "/(.*)",
         "dest": "app.py"
+      }
+    ],
+    "functions": {
+      "api": {
+        "runtime": "python3.8"
+      }
     }
-]
-}
+  }
+  
