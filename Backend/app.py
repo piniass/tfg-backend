@@ -15,11 +15,12 @@ app = FastAPI()
 # Configuración del CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173", "https://conexionfit.vercel.app"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
+
 
 app.include_router(entrenador)
 app.include_router(cliente)
