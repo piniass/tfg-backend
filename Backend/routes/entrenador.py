@@ -14,6 +14,9 @@ from fastapi.responses import JSONResponse
 
 entrenador = APIRouter()
 
+@entrenador.get("/")
+def hola_mundo():
+    return {'msg': "hola mundo"}
 
 @entrenador.get("/entrenadores")
 def get_entrenadores():
