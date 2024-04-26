@@ -65,8 +65,8 @@ def update_tarea(id:str,tarea:str,id_entrenador:int):
         raise HTTPException(status_code=404, detail="Tarea no encontrada")
     return {"message": f"Tarea con ID {id} actualizada"}
 
-@tarea.put("/tareas/{id}/confirmado")
-def update_confirmado_tarea(id: str, confirmado: bool):
+@tarea.put("/tareas/estado/{id}")
+def update_confirmado_tarea(id: str, confirmado: bool= Form(...)):
     result = conn.execute(tareas.update().where(tareas.c.id == id).values(confirmado=confirmado))
     conn.commit()
     if result.rowcount == 0:
