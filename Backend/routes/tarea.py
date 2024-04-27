@@ -54,10 +54,9 @@ def create_tarea(tarea:str = Form(...),id_entrenador:int= Form(...)):
     return {"message": f"Tarea creada"}
 
 @tarea.put("/tareas/{id}")
-def update_tarea(id:str,tarea:str,id_entrenador:int):
+def update_tarea(id:str,tarea:str= Form(...)):
     updated_tarea = {
         "tarea": tarea,
-        "id_entrenador": id_entrenador
     }
     result = conn.execute(tareas.update().where(tareas.c.id == id).values(updated_tarea))
     conn.commit()
