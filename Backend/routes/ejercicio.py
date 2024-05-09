@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Form, HTTPException
 from config.db import conn
 from models.ejercicio import ejercicios  # Importa la tabla de sesiones
 from schemas.ejercicios import Ejercicios  # Importa el esquema para crear sesiones
@@ -12,16 +12,21 @@ def get_ejercicios_by_entrenamiento_id(id: int):
     for row in query:
         ejercicio_dict = {
             "id": row[0],
-            "nombre": row[1],
-            "id_entrenamiento": row[2]
+            "grupo_muscular": row[1],
+            "series": row[2],
+            "repeticiones": row[3],
+            "id_entrenamiento": row[4]
         }
         ejercicios_list.append(ejercicio_dict)
     return ejercicios_list
 
 @ruta_ejercicios.post("/ejercicios/entreanmiento/{id}")
-def create_ejercicio_for_entrenamiento(id:int, ejercicio_create: Ejercicios):
+def create_ejercicio_for_entrenamiento(id:int, nombre: str = Form(...),grupo_muscular: str = Form(...),series:int=Form(...),repeticiones:int=Form(...)):
     nuevo_ejercicio = {
-        "nombre": ejercicio_create.nombre,
+        "nombre": nombre,
+        "grupo_muscular": grupo_muscular,
+        "series": series,
+        "repeticiones": repeticiones,
         "id_entrenamiento": id
     }
     conn.execute(ejercicios.insert().values(nuevo_ejercicio))
@@ -29,10 +34,12 @@ def create_ejercicio_for_entrenamiento(id:int, ejercicio_create: Ejercicios):
     return {"message": f"Ejercicio creado para el entrenamiento con ID {id}"}
 
 @ruta_ejercicios.put("/ejercicios/{id}")
-def update_ejercicio(id:int, ejercicio_create: Ejercicios):
+def update_ejercicio(id:int,  nombre: str = Form(...),grupo_muscular: str = Form(...),series:int=Form(...),repeticiones:int=Form(...)):
     nuevo_ejercicio = {
-        "nombre": ejercicio_create.nombre,
-        "id": id
+        "nombre": nombre,
+        "grupo_muscular": grupo_muscular,
+        "series": series,
+        "repeticiones": repeticiones,
     }
     result = conn.execute(ejercicios.update().where(ejercicios.c.id == id).values(nuevo_ejercicio))
     conn.commit()
