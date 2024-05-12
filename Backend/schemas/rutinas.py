@@ -7,4 +7,4 @@ class Rutinas(BaseModel):
     nombre: str
     foto:str
     fecha: datetime
-    id_cliente: int
+    id_entrenador: int
