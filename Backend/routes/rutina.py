@@ -21,8 +21,8 @@ def get_rutinas_by_entrenador_id(id: int):
         sesiones_list.append(rutinas_dict)
     return sesiones_list
 
-@ruta_rutinas.post("/rutinas/cliente/{id}")
-def create_rutinas_for_cliente(id:int, nombre: str = Form(...),foto: str = Form(...)):
+@ruta_rutinas.post("/rutinas/cliente/")
+def create_rutinas_for_cliente(id:int= Form(...), nombre: str = Form(...),foto: str = Form(...)):
     nueva_rutina = {
         "nombre": nombre,
         "foto":foto,
