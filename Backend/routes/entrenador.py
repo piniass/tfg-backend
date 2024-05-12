@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from jose import jwt, JWTError
 
 
 
@@ -105,4 +106,42 @@ async def delete_entrenador(id: str):
     if result.rowcount == 0:
         raise HTTPException(status_code=404, detail="Entrenador no encontrado")
     return {"message": f"Entrenador con ID {id} eliminado"}
+
+
+SECRET_KEY = "abcd1234"
+TOKEN_SECONDS_EXP = 3600 
+
+
+def get_entrenador(correo: str):
+    query = conn.execute(entrenadores.select().where(entrenadores.c.correo == correo))
+    return query.fetchone()  # Devuelve solo una fila
+
+def authenticate_user(entrenador: Entrenador, password: str):
+    return entrenador and entrenador.password == password
+
+
+def create_token(data: dict):
+    print(data)
+    data_token = data.copy()
+    print(data_token)
+    data_token["exp"] = datetime.utcnow() + timedelta(seconds=TOKEN_SECONDS_EXP)
+
+    print(data_token)
+    token_jwt = jwt.encode(data_token, key=SECRET_KEY, algorithm="HS256")
+    return token_jwt
+
+@entrenador.post("/entrenador/login")
+def login(correo: str = Form(...), password: str = Form(...)):
+    # Obtener el objeto entrenador de la base de datos
+    entrenador = get_entrenador(correo)
+    if not entrenador:
+        raise Exception("No existe el usuario")  # Usamos Exception para lanzar errores
+    if not authenticate_user(entrenador, password):
+        raise Exception("password incorrecta")  # Usamos Exception para lanzar errores
+    print(type(entrenador))
+    token = create_token({'correo':correo})
     
+    # Guardar el objeto entrenador en una variable
+
+    return {"token": token, "entrenador": entrenador}  # Retornamos el token y el objeto entrenador en un diccionario
+
