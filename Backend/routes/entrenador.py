@@ -109,7 +109,7 @@ async def delete_entrenador(id: str):
 
 
 SECRET_KEY = "abcd1234"
-TOKEN_SECONDS_EXP = 3600 
+TOKEN_SECONDS_EXP = 10 
 
 
 def get_entrenador(correo: str):
@@ -119,14 +119,12 @@ def get_entrenador(correo: str):
 def authenticate_user(entrenador: Entrenador, password: str):
     return entrenador and entrenador.password == password
 
-
-def create_token(data: dict):
-    print(data)
-    data_token = data.copy()
-    print(data_token)
-    data_token["exp"] = datetime.utcnow() + timedelta(seconds=TOKEN_SECONDS_EXP)
-
-    print(data_token)
+def create_token(correo: str):
+    exp_time = datetime.utcnow() + timedelta(seconds=TOKEN_SECONDS_EXP)
+    data_token = {
+        "correo": correo,
+        "exp": exp_time.timestamp()  # Convertimos la fecha de expiración a un timestamp
+    }
     token_jwt = jwt.encode(data_token, key=SECRET_KEY, algorithm="HS256")
     return token_jwt
 
@@ -138,10 +136,15 @@ def login(correo: str = Form(...), password: str = Form(...)):
         raise Exception("No existe el usuario")  # Usamos Exception para lanzar errores
     if not authenticate_user(entrenador, password):
         raise Exception("password incorrecta")  # Usamos Exception para lanzar errores
-    print(type(entrenador))
-    token = create_token({'correo':correo})
+
+    token = create_token(correo)
     
-    # Guardar el objeto entrenador en una variable
-
-    return {"token": token, "entrenador": entrenador}  # Retornamos el token y el objeto entrenador en un diccionario
-
+    # Convertir el objeto entrenador a un diccionario
+    entrenador_dict = {
+        "id": entrenador.id,
+        "nombre": entrenador.nombre,
+        "correo": entrenador.correo
+        # Añade cualquier otro atributo necesario
+    }
+    print({"token": token, "entrenador": entrenador_dict})
+    return {"token": token, "entrenador": entrenador_dict}  # Retornamos el token y el objeto entrenador en un diccionario
