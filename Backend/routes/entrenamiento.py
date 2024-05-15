@@ -7,7 +7,7 @@ ruta_entrenamientos = APIRouter()  # Cambia el nombre de la variable a sesiones_
 
 @ruta_entrenamientos.get("/entrenamientos/rutina/{id}")
 def get_entrenamientos_by_sesion_id(id: int):
-    query = conn.execute(entrenamientos.select().where(entrenamientos.c.id_rutinas == id))
+    query = conn.execute(entrenamientos.select().where(entrenamientos.c.id_rutina == id))
     entrenamientos_list = []
     for row in query:
         entrenamientos_dict = {
@@ -15,7 +15,7 @@ def get_entrenamientos_by_sesion_id(id: int):
             "nombre": row[1],
             "dia_semana":row[2],
             "fecha_creacion":row[3],
-            "id_rutinas": row[4]
+            "id_rutina": row[4]
         }
         entrenamientos_list.append(entrenamientos_dict)
     return entrenamientos_list
