@@ -2474,6 +2474,10 @@ venv/Lib/site-packages/pip/_vendor/__init__.py
 venv/Lib/site-packages/pip/_vendor/__pycache__/__init__.cpython-312.pyc
 venv/Lib/site-packages/pip/_vendor/__pycache__/six.cpython-312.pyc
 venv/Lib/site-packages/pip/_vendor/__pycache__/typing_extensions.cpython-312.pyc
+Backend/__pycache__/app.cpython-311.pyc
+Backend/__pycache__/app.cpython-311.pyc
+Backend/config/__pycache__/db.cpython-311.pyc
+Backend/routes/__pycache__/entrenador.cpython-311.pyc
 venv/Include/site/python3.11/greenlet/greenlet.h
 venv/Lib/site-packages/__pycache__/typing_extensions.cpython-311.pyc
 venv/Lib/site-packages/_distutils_hack/__init__.py

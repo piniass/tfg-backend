@@ -6,4 +6,5 @@ class Tarea(BaseModel):
     id: Optional[int]
     tarea: str
     fecha_creacion: date
-    id_entrenador:int
+    id_entrenador: int
+    confirmado: bool = False

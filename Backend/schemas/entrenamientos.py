@@ -7,4 +7,4 @@ class Entrenamientos(BaseModel):
     nombre: str
     dia_semana:str
     fecha_creacion:datetime
-    id_sesion: int
+    id_rutina: int
