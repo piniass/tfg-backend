@@ -20,14 +20,14 @@ def get_ejercicios_by_entrenamiento_id(id: int):
         ejercicios_list.append(ejercicio_dict)
     return ejercicios_list
 
-@ruta_ejercicios.post("/ejercicios/entreanmiento/{id}")
-def create_ejercicio_for_entrenamiento(id:int, nombre: str = Form(...),grupo_muscular: str = Form(...),series:int=Form(...),repeticiones:int=Form(...)):
+@ruta_ejercicios.post("/ejercicios/entreanmiento")
+def create_ejercicio_for_entrenamiento(id_entrenamiento:int= Form(...), nombre: str = Form(...),grupo_muscular: str = Form(...),series:int=Form(...),repeticiones:int=Form(...)):
     nuevo_ejercicio = {
         "nombre": nombre,
         "grupo_muscular": grupo_muscular,
         "series": series,
         "repeticiones": repeticiones,
-        "id_entrenamiento": id
+        "id_entrenamiento": id_entrenamiento
     }
     conn.execute(ejercicios.insert().values(nuevo_ejercicio))
     conn.commit()
