@@ -12,10 +12,11 @@ def get_ejercicios_by_entrenamiento_id(id: int):
     for row in query:
         ejercicio_dict = {
             "id": row[0],
-            "grupo_muscular": row[1],
-            "series": row[2],
-            "repeticiones": row[3],
-            "id_entrenamiento": row[4]
+            "nombre":row[1],
+            "grupo_muscular": row[2],
+            "series": row[3],
+            "repeticiones": row[4],
+            "id_entrenamiento": row[5]
         }
         ejercicios_list.append(ejercicio_dict)
     return ejercicios_list
