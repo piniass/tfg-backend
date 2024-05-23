@@ -32,7 +32,7 @@ def create_ejercicio_for_entrenamiento(id_entrenamiento:int= Form(...), nombre: 
     }
     conn.execute(ejercicios.insert().values(nuevo_ejercicio))
     conn.commit()
-    return {"message": f"Ejercicio creado para el entrenamiento con ID {id}"}
+    return {"message": f"Ejercicio creado para el entrenamiento con ID {id_entrenamiento}"}
 
 @ruta_ejercicios.put("/ejercicios/{id}")
 def update_ejercicio(id:int,  nombre: str = Form(...),grupo_muscular: str = Form(...),series:int=Form(...),repeticiones:int=Form(...)):
