@@ -10,3 +10,4 @@ class Cliente(BaseModel):
     patologias: Optional[str]
     avatar: str
     id_entrenador: int
+    id_rutina: int
