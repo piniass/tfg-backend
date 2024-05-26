@@ -15,4 +15,3 @@ ejercicios = Table("ejercicios", meta,
                    Column("id_entrenamiento", Integer, ForeignKey('entrenamientos.id', ondelete="CASCADE")) 
                    )
 
-meta.create_all(engine)

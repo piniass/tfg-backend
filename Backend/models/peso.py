@@ -13,4 +13,3 @@ registro_pesos = Table("registro_pesos", meta,
                    Column("id_cliente", Integer, ForeignKey('clientes.id', ondelete="CASCADE"))
                    )
 
-meta.create_all(engine)
