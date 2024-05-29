@@ -3,6 +3,7 @@ from config.db import conn
 from models.ejercicio import ejercicios  # Importa la tabla de sesiones
 from schemas.ejercicios import Ejercicios  # Importa el esquema para crear sesiones
 from sqlalchemy import text
+import time
 
 
 ruta_ejercicios = APIRouter()  # Cambia el nombre de la variable a sesiones_router
@@ -61,6 +62,7 @@ def delete_ejercicio(id: int):
 
 @ruta_ejercicios.get("/ejercicios/rutina/cliente/{id_cliente}")
 def count_grupo_rutina(id_cliente: int):
+    time.sleep(2)
     query = text(
         """
         SELECT grupo_muscular, COUNT(*) as total
