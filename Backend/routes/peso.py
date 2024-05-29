@@ -1,3 +1,4 @@
+import time
 from fastapi import APIRouter, HTTPException
 from config.db import conn
 from models.peso import registro_pesos  # Importa la tabla de registro_pesos
@@ -10,6 +11,7 @@ pesos = APIRouter()  # Cambia el nombre de la variable a pesos_router
 
 @pesos.get("/pesos/cliente/{id}")
 def get_registro_pesos_by_id(id: int):
+    time.sleep(1)
     query = conn.execute(registro_pesos.select().where(registro_pesos.c.id_cliente == id))
     registro_pesos_list = []
     for row in query:
