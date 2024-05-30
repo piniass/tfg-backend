@@ -11,7 +11,6 @@ rutinas = Table("rutinas", meta,
                    Column("nombre",String(255)),
                    Column("foto",String(255)),
                    Column("fecha_creacion", DateTime, default=func.now()),
-                   Column("id_entrenador", Integer, ForeignKey('entrenadores.id'))
+                   Column("id_entrenador", Integer, ForeignKey('entrenadores.id', ondelete="CASCADE"))
                    )
 
-meta.create_all(engine)

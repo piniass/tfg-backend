@@ -10,7 +10,6 @@ registro_pesos = Table("registro_pesos", meta,
                    Column("id", Integer, primary_key=True, autoincrement=True),
                    Column("peso", Float(precision=2)),
                    Column("fecha", DateTime, default=func.now()),
-                   Column("id_cliente", Integer, ForeignKey('clientes.id'))
+                   Column("id_cliente", Integer, ForeignKey('clientes.id', ondelete="CASCADE"))
                    )
 
-meta.create_all(engine)

@@ -10,4 +10,3 @@ entrenadores = Table("entrenadores", meta,
                    Column("password", String(50)),
                    Column("avatar", String(50)))
 
-meta.create_all(engine)
