@@ -133,9 +133,9 @@ def login(correo: str = Form(...), password: str = Form(...)):
     # Obtener el objeto entrenador de la base de datos
     entrenador = get_entrenador(correo)
     if not entrenador:
-        raise Exception("No existe el usuario")  # Usamos Exception para lanzar errores
+        return ("No existe el usuario")  # Usamos Exception para lanzar errores
     if not authenticate_user(entrenador, password):
-        raise Exception("password incorrecta")  # Usamos Exception para lanzar errores
+        return ("Contraseña incorrecta")  # Usamos Exception para lanzar errores
 
     token = create_token(correo)
     
@@ -143,7 +143,9 @@ def login(correo: str = Form(...), password: str = Form(...)):
     entrenador_dict = {
         "id": entrenador.id,
         "nombre": entrenador.nombre,
-        "correo": entrenador.correo
+        "apellido":entrenador.apellido,
+        "correo": entrenador.correo,
+        "avatar": entrenador.avatar
         # Añade cualquier otro atributo necesario
     }
     print({"token": token, "entrenador": entrenador_dict})
