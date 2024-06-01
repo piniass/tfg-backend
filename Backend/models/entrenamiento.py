@@ -9,7 +9,6 @@ entrenamientos = Table("entrenamientos", meta,
                    Column("nombre",String(255)),
                    Column("dia_semana",String(255)),
                    Column("fecha_creacion", DateTime, default=func.now()),
-                   Column("id_rutina", Integer, ForeignKey('rutinas.id'))
+                   Column("id_rutina", Integer, ForeignKey('rutinas.id', ondelete="CASCADE"))
                    )
 
-meta.create_all(engine)

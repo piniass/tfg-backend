@@ -6,9 +6,9 @@ from fastapi import Form
 
 ruta_rutinas = APIRouter() 
 
-@ruta_rutinas.get("/rutinas/cliente/{id}")
-def get_rutinas_by_cliente_id(id: int):
-    query = conn.execute(rutinas.select().where(rutinas.c.id_cliente == id))
+@ruta_rutinas.get("/rutinas/entrenador/{id}")
+def get_rutinas_by_entrenador_id(id: int):
+    query = conn.execute(rutinas.select().where(rutinas.c.id_entrenador == id))
     sesiones_list = []
     for row in query:
         rutinas_dict = {
@@ -16,17 +16,17 @@ def get_rutinas_by_cliente_id(id: int):
             "nombre": row[1],
             "foto":row[2],
             "fecha_creacion": row[3],
-            "id_cliente": row[4]
+            "id_entrenador": row[4]
         }
         sesiones_list.append(rutinas_dict)
     return sesiones_list
 
-@ruta_rutinas.post("/rutinas/cliente/{id}")
-def create_rutinas_for_cliente(id:int, nombre: str = Form(...),foto: str = Form(...)):
+@ruta_rutinas.post("/rutinas/cliente/")
+def create_rutinas_for_cliente(id:int= Form(...), nombre: str = Form(...),foto: str = Form(...)):
     nueva_rutina = {
         "nombre": nombre,
         "foto":foto,
-        "id_cliente": id
+        "id_entrenador": id
     }
     conn.execute(rutinas.insert().values(nueva_rutina))
     conn.commit()

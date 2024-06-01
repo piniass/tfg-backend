@@ -59,7 +59,8 @@ def get_cliente_byentrenador(id:str):
             "altura": row[4],
             "patologias": row[5],
             "avatar": row[6],
-            "id_entrenador": row[7]
+            "id_entrenador": row[7],
+            "id_rutina": row[8]
         }
         cliente_list.append(cliente_dict)
     return cliente_list
@@ -110,21 +111,42 @@ def create_cliente(nombre: str = Form(...), apellido: str = Form(...), edad: int
     return {"message": f"Cliente {nombre} {apellido} creado"}
 
 @cliente.put("/cliente/{id}")
-def update_cliente(id: str, cliente: Cliente):
+def update_cliente(
+    id: int,
+    nombre: str = Form(...),
+    apellido: str = Form(...),
+    edad: int = Form(...),
+    altura: float = Form(...),
+    patologias: str = Form(...),
+    avatar: str = Form(...)
+):
     updated_cliente = {
-        "nombre": cliente.nombre,
-        "apellido": cliente.apellido,
-        "edad": cliente.edad,
-        "altura": cliente.altura,
-        "patologias": cliente.patologias,
-        "avatar": cliente.avatar,
-        "id_entrenador": cliente.id_entrenador
+        "nombre": nombre,
+        "apellido": apellido,
+        "edad": edad,
+        "altura": altura,
+        "patologias": patologias,
+        "avatar": avatar
     }
     result = conn.execute(clientes.update().where(clientes.c.id == id).values(updated_cliente))
     conn.commit()
     if result.rowcount == 0:
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
     return {"message": f"Cliente con ID {id} actualizado"}
+
+@cliente.put("/cliente/rutina/{id}")
+def add_rutina_cliente(
+    id: int,
+    id_rutina: int = Form(...)
+):
+    updated_cliente = {
+        "id_rutina": id_rutina,
+    }
+    result = conn.execute(clientes.update().where(clientes.c.id == id).values(updated_cliente))
+    conn.commit()
+    if result.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+    return {"message": f"Rutina agregada al cliente {id} actualizado"}
 
 @cliente.delete("/cliente/{id}")
 def delete_cliente(id: str):

@@ -11,4 +11,3 @@ tareas = Table(
     Column("confirmado", Boolean, default=False)
 )
 
-meta.create_all(engine)
