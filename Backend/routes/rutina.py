@@ -3,11 +3,13 @@ from config.db import conn
 from models.rutina import rutinas  # Importa la tabla de rutinas
 from schemas.rutinas import Rutinas  # Importa el esquema para crear rutinas
 from fastapi import Form
+import time
 
 ruta_rutinas = APIRouter() 
 
 @ruta_rutinas.get("/rutinas/entrenador/{id}")
 def get_rutinas_by_entrenador_id(id: int):
+    time.sleep(1)
     query = conn.execute(rutinas.select().where(rutinas.c.id_entrenador == id))
     sesiones_list = []
     for row in query:
