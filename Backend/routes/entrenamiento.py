@@ -2,11 +2,12 @@ from fastapi import APIRouter, Form, HTTPException
 from config.db import conn
 from models.entrenamiento import entrenamientos  # Importa la tabla de sesiones
 from schemas.entrenamientos import Entrenamientos  # Importa el esquema para crear sesiones
-
+import time
 ruta_entrenamientos = APIRouter()  # Cambia el nombre de la variable a sesiones_router
 
 @ruta_entrenamientos.get("/entrenamientos/rutina/{id}")
 def get_entrenamientos_by_sesion_id(id: int):
+    time.sleep(1)
     query = conn.execute(entrenamientos.select().where(entrenamientos.c.id_rutina == id))
     entrenamientos_list = []
     for row in query:
