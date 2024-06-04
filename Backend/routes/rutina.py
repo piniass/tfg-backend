@@ -9,19 +9,24 @@ ruta_rutinas = APIRouter()
 
 @ruta_rutinas.get("/rutinas/entrenador/{id}")
 def get_rutinas_by_entrenador_id(id: int):
-    time.sleep(1)
-    query = conn.execute(rutinas.select().where(rutinas.c.id_entrenador == id))
-    sesiones_list = []
-    for row in query:
-        rutinas_dict = {
-            "id": row[0],
-            "nombre": row[1],
-            "foto":row[2],
-            "fecha_creacion": row[3],
-            "id_entrenador": row[4]
-        }
-        sesiones_list.append(rutinas_dict)
-    return sesiones_list
+    try:
+        time.sleep(1)
+        query = conn.execute(rutinas.select().where(rutinas.c.id_entrenador == id))
+        sesiones_list = []
+        for row in query:
+            rutinas_dict = {
+                "id": row[0],
+                "nombre": row[1],
+                "foto": row[2],
+                "fecha_creacion": row[3],
+                "id_entrenador": row[4]
+            }
+            sesiones_list.append(rutinas_dict)
+        return sesiones_list
+    except Exception as e:
+        conn.rollback()
+        return {"error": str(e)}
+
 
 @ruta_rutinas.post("/rutinas/cliente/")
 def create_rutinas_for_cliente(id:int= Form(...), nombre: str = Form(...),foto: str = Form(...)):
