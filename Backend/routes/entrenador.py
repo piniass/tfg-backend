@@ -102,7 +102,7 @@ def confirmar_correo(correo: str):
     query = conn.execute(entrenadores.select().where(entrenadores.c.correo == correo))
     return query.fetchone() is not None  # True si el correo ya está en uso, False si no lo está
 
-SECRET_KEY = "abcdñ1234"
+SECRET_KEY = 'TANG"5MY=z6QII-KkTqVñ'
 TOKEN_SECONDS_EXP = 10 
 
 
