@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from jose import jwt, JWTError
 
 
 
@@ -57,31 +58,22 @@ async def create_entrenador(
     password: str = Form(...),
     avatar: str = Form(...)
 ):
-    try:
-        if not nombre:
-            raise HTTPException(status_code=422, detail="El campo 'nombre' está vacío")
-        if not apellido:
-            raise HTTPException(status_code=422, detail="El campo 'apellido' está vacío")
-        if not correo:
-            raise HTTPException(status_code=422, detail="El campo 'correo' está vacío")
-        if not password:
-            raise HTTPException(status_code=422, detail="El campo 'password' está vacío")
-        if not avatar:
-            raise HTTPException(status_code=422, detail="El campo 'avatar' está vacío")
-    ##Controlar que los usuarios no tengan el mismo correo electronico
-        new_entrenador = {
-            "nombre": nombre,
-            "apellido": apellido,
-            "correo": correo,
-            "password": password,
-            "avatar": avatar
-        }
+    if confirmar_correo(correo):
+        raise HTTPException(status_code=422, detail="El correo ya está en uso")
+    
+    new_entrenador = {
+        "nombre": nombre,
+        "apellido": apellido,
+        "correo": correo,
+        "password": password,
+        "avatar": avatar
+    }
 
-        conn.execute(entrenadores.insert().values(new_entrenador))
-        conn.commit()
-        return {"message": f"Entrenador {nombre} {apellido} creado"}
-    except HTTPException as e:
-        return e.detail
+    conn.execute(entrenadores.insert().values(new_entrenador))
+    conn.commit()
+    return {"message": f"Entrenador {nombre} {apellido} creado"}
+
+    
 
 
 
@@ -108,4 +100,50 @@ async def delete_entrenador(id: str):
     if result.rowcount == 0:
         raise HTTPException(status_code=404, detail="Entrenador no encontrado")
     return {"message": f"Entrenador con ID {id} eliminado"}
+
+def confirmar_correo(correo: str):
+    query = conn.execute(entrenadores.select().where(entrenadores.c.correo == correo))
+    return query.fetchone() is not None  # True si el correo ya está en uso, False si no lo está
+
+SECRET_KEY = 'TANG"5MY=z6QII-KkTqVñ'
+TOKEN_SECONDS_EXP = 10 
+
+
+def get_entrenador(correo: str):
+    query = conn.execute(entrenadores.select().where(entrenadores.c.correo == correo))
+    return query.fetchone()  # Devuelve solo una fila
+
+def authenticate_user(entrenador: Entrenador, password: str):
+    return entrenador and entrenador.password == password
+
+def create_token(correo: str):
+    exp_time = datetime.utcnow() + timedelta(seconds=TOKEN_SECONDS_EXP)
+    data_token = {
+        "correo": correo,
+        "exp": exp_time.timestamp()  # Convertimos la fecha de expiración a un timestamp
+    }
+    token_jwt = jwt.encode(data_token, key=SECRET_KEY, algorithm="HS256")
+    return token_jwt
+
+@entrenador.post("/entrenador/login")
+def login(correo: str = Form(...), password: str = Form(...)):
+    # Obtener el objeto entrenador de la base de datos
+    entrenador = get_entrenador(correo)
+    if not entrenador:
+        return ("No existe el usuario")  # Usamos Exception para lanzar errores
+    if not authenticate_user(entrenador, password):
+        return ("Contraseña incorrecta")  # Usamos Exception para lanzar errores
+
+    token = create_token(correo)
     
+    # Convertir el objeto entrenador a un diccionario
+    entrenador_dict = {
+        "id": entrenador.id,
+        "nombre": entrenador.nombre,
+        "apellido":entrenador.apellido,
+        "correo": entrenador.correo,
+        "avatar": entrenador.avatar
+        # Añade cualquier otro atributo necesario
+    }
+    print({"token": token, "entrenador": entrenador_dict})
+    return {"token": token, "entrenador": entrenador_dict}  # Retornamos el token y el objeto entrenador en un diccionario
