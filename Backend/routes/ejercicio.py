@@ -60,8 +60,8 @@ def delete_ejercicio(id: int):
         raise HTTPException(status_code=404, detail="Ejercicio no encontrado")
     return {"message": f"Ejercicio con ID {id} eliminado"}
 
-@ruta_ejercicios.get("/ejercicios/rutina/cliente/{id_cliente}")
-def count_grupo_rutina(id_cliente: int):
+@ruta_ejercicios.get("/ejercicios/rutina/cliente/{id_rutina}")
+def count_grupo_rutina(id_rutina: int):
     try:
         query = text(
             """
@@ -70,11 +70,11 @@ def count_grupo_rutina(id_cliente: int):
             JOIN entrenamientos ON ejercicios.id_entrenamiento = entrenamientos.id
             JOIN rutinas ON entrenamientos.id_rutina = rutinas.id
             JOIN clientes ON rutinas.id = clientes.id_rutina
-            WHERE clientes.id = :id_cliente
+            WHERE rutinas.id = :id_rutina
             GROUP BY grupo_muscular
             """
         )
-        result = conn.execute(query, {"id_cliente": id_cliente}).fetchall()
+        result = conn.execute(query, {"id_rutina": id_rutina}).fetchall()
         count = {row[0]: row[1] for row in result}
         return count
     except Exception as e:
